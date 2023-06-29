@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="LOGS" value="./logs" />
+
+    <!-- Console 에 log message 를 남기겠다는 의미 -->
+    <appender name="Console"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+    <!-- File 을 읽고 Log 로 남겨주겠다는 의미 -->
+    <appender name="File" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS}/file-log.log</file>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1} [%t] %m%n</Pattern>
+        </encoder>
+
+    </appender>
+
+    <!-- LogFile 을 남겨놓기 위한 시점 -->
+    <appender name="RollingFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/rolling-file-log.log</file>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1} [%t] %m%n</Pattern>
+        </encoder>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/archived/rolling-file-log-%d{yyyy-MM-dd_HH-mm-ss}.%i.log
+            </fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </root>
+
+<!--    &lt;!&ndash; LOG "org*" at WARN level &ndash;&gt;-->
+<!--    <logger name="org" level="warn" additivity="false">-->
+<!--        <appender-ref ref="Console" />-->
+<!--        <appender-ref ref="File" />-->
+<!--    </logger>-->
+
+<!--    &lt;!&ndash; LOG "com.example.contents*" at TRACE level &ndash;&gt;-->
+<!--    <logger name="com.example.contents" level="trace" additivity="false">-->
+<!--        <appender-ref ref="RollingFile" />-->
+<!--        <appender-ref ref="Console" />-->
+<!--        <appender-ref ref="File" />-->
+<!--    </logger>-->
+
+</configuration>
